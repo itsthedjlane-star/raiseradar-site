@@ -278,7 +278,7 @@
         if (res.ok) {
           form.style.display = 'none';
           msg.style.color = '#16E0A3';
-          msg.innerHTML = "✓ You're on the list — this Monday's feed is on its way. Check your inbox (and spam, just in case).";
+          msg.innerHTML = "✓ You're in! <a href='/sample.csv' download style='color:#16E0A3;text-decoration:underline;font-weight:600'>Download this week's list →</a><br>We've got your email and will send fresh feeds as they publish.";
         } else {
           res.json().then(function (data) {
             btn.disabled = false;
