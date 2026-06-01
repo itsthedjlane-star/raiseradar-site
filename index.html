@@ -196,20 +196,20 @@
         <div class="tier">Starter</div>
         <div class="amt">$99<span>/mo</span></div>
         <ul><li>Full weekly CSV</li><li>All industries &amp; states</li><li>Amount raised + exec contact</li><li>Email delivery</li></ul>
-        <a href="#signup" class="btn">Start free week</a>
+        <a href="#signup" class="btn" data-plan="starter">Start free week</a>
       </div>
       <div class="price feature">
         <div class="badge">Most popular</div>
         <div class="tier">Pro</div>
         <div class="amt">$299<span>/mo</span></div>
         <ul><li>Everything in Starter</li><li>Filtered to your niche + geo</li><li>Delivered to inbox or Google Sheet</li><li>Priority support</li></ul>
-        <a href="#signup" class="btn">Start free week</a>
+        <a href="#signup" class="btn" data-plan="pro">Start free week</a>
       </div>
       <div class="price basic">
         <div class="tier">API / White-label</div>
         <div class="amt">$499<span>+/mo</span></div>
         <ul><li>Everything in Pro</li><li>API access</li><li>Resell under your brand</li><li>Custom sources on request</li></ul>
-        <a href="#signup" class="btn">Talk to us</a>
+        <a href="#signup" class="btn" data-plan="api">Talk to us</a>
       </div>
     </div>
   </div>
@@ -238,6 +238,28 @@
 </footer>
 
 <script>
+  // ===== STRIPE PAYMENT LINKS =====
+  // Paste your Stripe Payment Link URLs here. While a value is empty, that plan's
+  // button stays "Start free week" -> email capture (no broken links).
+  // The moment a URL is filled in, the button switches to a direct Stripe checkout.
+  var STRIPE_LINKS = {
+    starter: "", // e.g. "https://buy.stripe.com/xxxxxxxx"  ($99/mo)
+    pro:     "", // e.g. "https://buy.stripe.com/yyyyyyyy"  ($299/mo)
+    api:     ""  // e.g. "https://buy.stripe.com/zzzzzzzz"  ($499/mo)
+  };
+  (function () {
+    var labels = { starter: "Subscribe — $99/mo", pro: "Subscribe — $299/mo", api: "Get API access" };
+    document.querySelectorAll('a[data-plan]').forEach(function (a) {
+      var plan = a.getAttribute('data-plan');
+      var url = STRIPE_LINKS[plan];
+      if (url) {
+        a.setAttribute('href', url);
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener');
+        a.textContent = labels[plan] || a.textContent;
+      }
+    });
+  })();
   (function () {
     var form = document.getElementById('signup-form');
     var msg = document.getElementById('signup-msg');
