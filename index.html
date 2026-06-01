@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RaiseRadar — Know who just got funded</title>
+<meta name="description" content="A weekly list of US companies that just closed a private funding round — company, amount raised, industry, and a named exec. Sourced from official SEC filings." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1F33; --green:#16E0A3; --slate:#5B6B7B; --mist:#F4F7FA;
+    --amber:#FFB020; --white:#fff; --line:#E4EAF0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--ink);line-height:1.6;background:var(--white);-webkit-font-smoothing:antialiased}
+  h1,h2,h3,.logo,.stat-num{font-family:'Space Grotesk',sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;background:rgba(11,31,51,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:20px}
+  .logo .green{color:var(--green)}
+  .nav-cta{background:var(--green);color:var(--ink)!important;font-weight:600;padding:9px 18px;border-radius:8px;font-size:14px}
+
+  /* hero */
+  .hero{background:linear-gradient(160deg,#0B1F33 0%,#12304d 100%);color:#fff;padding:84px 0 72px;position:relative;overflow:hidden}
+  .hero .wrap{position:relative;z-index:2;max-width:760px}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(22,224,163,.12);color:var(--green);border:1px solid rgba(22,224,163,.3);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:22px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(22,224,163,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(22,224,163,.6)}70%{box-shadow:0 0 0 10px rgba(22,224,163,0)}100%{box-shadow:0 0 0 0 rgba(22,224,163,0)}}
+  .hero h1{font-size:clamp(34px,5vw,56px);line-height:1.05;font-weight:700;letter-spacing:-1px}
+  .hero h1 .green{color:var(--green)}
+  .hero p.sub{font-size:clamp(17px,2vw,20px);color:#c7d3df;margin:22px 0 34px;max-width:620px}
+  .btn{display:inline-block;background:var(--green);color:var(--ink);font-weight:600;padding:15px 28px;border-radius:10px;font-size:16px;border:none;cursor:pointer;transition:transform .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25);margin-left:10px}
+  .hero-stats{display:flex;gap:40px;margin-top:48px;flex-wrap:wrap}
+  .stat-num{font-size:30px;font-weight:700;color:var(--green)}
+  .stat-lbl{font-size:13px;color:#9fb0c0;text-transform:uppercase;letter-spacing:.5px}
+  .radar{position:absolute;right:-120px;top:-60px;width:520px;height:520px;opacity:.5;z-index:1}
+
+  /* logos / trust strip */
+  .strip{background:var(--ink);color:#7e90a2;text-align:center;padding:16px 0;font-size:13px;letter-spacing:.5px;border-top:1px solid rgba(255,255,255,.06)}
+
+  /* sections */
+  section{padding:72px 0}
+  .eyebrow{color:var(--green);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+  h2{font-size:clamp(26px,3.4vw,38px);font-weight:700;letter-spacing:-.5px;margin-bottom:14px}
+  .lead{color:var(--slate);font-size:18px;max-width:640px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:44px}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .card .ico{width:42px;height:42px;border-radius:10px;background:rgba(22,224,163,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px}
+  .card h3{font-size:18px;margin-bottom:8px}
+  .card p{color:var(--slate);font-size:15px}
+
+  /* sample table */
+  .sample{background:var(--mist)}
+  .tablecard{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:36px;box-shadow:0 20px 50px -30px rgba(11,31,51,.35)}
+  .tablecard .thead{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:var(--ink);color:#fff}
+  .tablecard .thead b{font-family:'Space Grotesk';font-size:15px}
+  .tag-new{background:var(--amber);color:#3a2600;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;text-transform:uppercase}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:13px 22px;border-bottom:1px solid var(--line)}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--slate);background:#fafcfe}
+  td.amt{font-weight:600;color:#0a8f66;font-variant-numeric:tabular-nums}
+  tbody tr:hover{background:#f8fcfa}
+  .blurred td{filter:blur(4px);user-select:none}
+  .lockrow td{text-align:center;color:var(--slate);background:#fafcfe;font-weight:500}
+
+  /* pricing */
+  .prices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;margin-top:44px}
+  .price{border:1px solid var(--line);border-radius:16px;padding:30px;background:#fff;position:relative}
+  .price.feature{border:2px solid var(--green);box-shadow:0 20px 50px -30px rgba(22,224,163,.5)}
+  .price .badge{position:absolute;top:-12px;right:22px;background:var(--green);color:var(--ink);font-size:12px;font-weight:700;padding:4px 12px;border-radius:6px}
+  .price .tier{font-family:'Space Grotesk';font-weight:600;font-size:15px;color:var(--slate);text-transform:uppercase;letter-spacing:.5px}
+  .price .amt{font-family:'Space Grotesk';font-size:42px;font-weight:700;margin:8px 0}
+  .price .amt span{font-size:16px;color:var(--slate);font-weight:500}
+  .price ul{list-style:none;margin:18px 0 24px}
+  .price li{padding:7px 0;color:var(--slate);font-size:15px;display:flex;gap:10px}
+  .price li::before{content:"✓";color:var(--green);font-weight:700}
+  .price .btn{width:100%;text-align:center}
+  .price.feature .btn{background:var(--green)}
+  .price.basic .btn{background:var(--ink);color:#fff}
+
+  /* CTA / signup */
+  .signup{background:linear-gradient(160deg,#0B1F33,#12304d);color:#fff;border-radius:20px;padding:54px 40px;text-align:center;margin:0 24px}
+  .signup h2{color:#fff}
+  .signup p{color:#c7d3df;max-width:520px;margin:12px auto 28px}
+  .form{display:flex;gap:10px;max-width:460px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+  .form input{flex:1;min-width:220px;padding:15px 18px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;font-size:15px;font-family:inherit}
+  .form input::placeholder{color:#9fb0c0}
+  .fineprint{font-size:13px;color:#9fb0c0;margin-top:14px}
+
+  footer{background:var(--ink);color:#7e90a2;padding:40px 0;font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  footer a:hover{color:#fff}
+  @media(max-width:640px){.hero-stats{gap:26px}.btn-ghost{margin-left:0;margin-top:10px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#">
+      <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="44" stroke="#16E0A3" stroke-width="5" opacity=".35"/>
+        <circle cx="50" cy="50" r="26" stroke="#16E0A3" stroke-width="4" opacity=".55"/>
+        <path d="M50 50 L50 8 A42 42 0 0 1 88 44 Z" fill="#16E0A3" opacity=".5"/>
+        <circle cx="72" cy="32" r="7" fill="#16E0A3"/>
+      </svg>
+      Raise<span class="green">Radar</span>
+    </a>
+    <a href="#signup" class="nav-cta">Get this week's list</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <svg class="radar" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="46" stroke="#16E0A3" stroke-width="1.5" opacity=".3"/>
+    <circle cx="50" cy="50" r="32" stroke="#16E0A3" stroke-width="1.5" opacity=".25"/>
+    <circle cx="50" cy="50" r="18" stroke="#16E0A3" stroke-width="1.5" opacity=".2"/>
+    <path d="M50 50 L50 4 A46 46 0 0 1 92 38 Z" fill="#16E0A3" opacity=".18"/>
+  </svg>
+  <div class="wrap">
+    <span class="pill"><span class="dot"></span> Updated every Monday from SEC filings</span>
+    <h1>Know who <span class="green">just got funded.</span></h1>
+    <p class="sub">RaiseRadar sends you a clean weekly list of US companies that just closed a private funding round — with the amount raised, industry, location, and a named executive. Reach them the week the money lands.</p>
+    <a href="#signup" class="btn">Get this week's list →</a>
+    <a href="#sample" class="btn btn-ghost">See a sample</a>
+    <div class="hero-stats">
+      <div><div class="stat-num tnum">1,300+</div><div class="stat-lbl">New raises / week</div></div>
+      <div><div class="stat-num">100%</div><div class="stat-lbl">Official SEC data</div></div>
+      <div><div class="stat-num">Mon</div><div class="stat-lbl">In your inbox</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">SOURCED FROM SEC EDGAR FORM D FILINGS · COMPLIANT · NO SCRAPING · NAMED DECISION-MAKERS</div>
+
+<!-- value props -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why RaiseRadar</div>
+    <h2>The money just landed. Get there first.</h2>
+    <p class="lead">When a company files a Form D, they've just raised capital — and they're about to spend it on hiring, tools, and services. You get the list while the budget is fresh.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">💸</div><h3>Fresh capital, ready budget</h3><p>Every company on the list closed a round in the last 7 days. New money means new spending.</p></div>
+      <div class="card"><div class="ico">👤</div><h3>A named decision-maker</h3><p>Each record includes an executive named in the filing — not a generic info@ address.</p></div>
+      <div class="card"><div class="ico">🛡️</div><h3>Compliant by design</h3><p>100% official SEC public records. No scraping, no grey-area consumer data, full provenance on every row.</p></div>
+      <div class="card"><div class="ico">📥</div><h3>Zero work for you</h3><p>Filtered to your industry and geography, delivered to your inbox every Monday. Cancel anytime.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- sample -->
+<section class="sample" id="sample">
+  <div class="wrap">
+    <div class="eyebrow">Live sample</div>
+    <h2>Companies that raised last week</h2>
+    <p class="lead">A snapshot of real filings. The full feed includes the exec contact, filing link, and 1,000+ more companies each week.</p>
+    <div class="tablecard">
+      <div class="thead"><b>RaiseRadar — Weekly Feed</b><span class="tag-new">New this week</span></div>
+      <table>
+        <thead><tr><th>Company</th><th>State</th><th>Industry</th><th>Raised</th><th>Exec contact</th></tr></thead>
+        <tbody>
+          <tr><td>Star Catcher Industries Inc.</td><td>FL</td><td>Technology</td><td class="amt">$65.0M</td><td>Andrew Rush</td></tr>
+          <tr><td>Farmers State Bancshares</td><td>NE</td><td>Commercial Banking</td><td class="amt">$15.0M</td><td>Richard Stull</td></tr>
+          <tr><td>Piston Technologies, Inc.</td><td>CA</td><td>Manufacturing</td><td class="amt">$15.0M</td><td>Vikram Sekhon</td></tr>
+          <tr><td>CB-Emmanuel Realty, LLC</td><td>NY</td><td>Real Estate</td><td class="amt">$6.0M</td><td>Benathan Upshaw</td></tr>
+          <tr><td>Dynamic Creatures Inc.</td><td>CA</td><td>Technology</td><td class="amt">$6.0M</td><td>Marc Theermann</td></tr>
+          <tr><td>Rely Intelligence, Inc.</td><td>ME</td><td>Technology</td><td class="amt">$4.5M</td><td>George Matelich</td></tr>
+          <tr class="blurred"><td>Endeavor Orthopaedics</td><td>OK</td><td>Health Care</td><td class="amt">$3.2M</td><td>Greg Parranto</td></tr>
+          <tr class="lockrow"><td colspan="5">🔒 + 1,000 more companies in this week's full feed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:22px"><a href="#signup" class="btn">Get the full list →</a></p>
+  </div>
+</section>
+
+<!-- pricing -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h2>Simple, monthly, cancel anytime.</h2>
+    <p class="lead">Start free this week. Pay only if the leads turn into pipeline.</p>
+    <div class="prices">
+      <div class="price basic">
+        <div class="tier">Starter</div>
+        <div class="amt">$99<span>/mo</span></div>
+        <ul><li>Full weekly CSV</li><li>All industries &amp; states</li><li>Amount raised + exec contact</li><li>Email delivery</li></ul>
+        <a href="#signup" class="btn">Start free week</a>
+      </div>
+      <div class="price feature">
+        <div class="badge">Most popular</div>
+        <div class="tier">Pro</div>
+        <div class="amt">$299<span>/mo</span></div>
+        <ul><li>Everything in Starter</li><li>Filtered to your niche + geo</li><li>Delivered to inbox or Google Sheet</li><li>Priority support</li></ul>
+        <a href="#signup" class="btn">Start free week</a>
+      </div>
+      <div class="price basic">
+        <div class="tier">API / White-label</div>
+        <div class="amt">$499<span>+/mo</span></div>
+        <ul><li>Everything in Pro</li><li>API access</li><li>Resell under your brand</li><li>Custom sources on request</li></ul>
+        <a href="#signup" class="btn">Talk to us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- signup -->
+<section id="signup">
+  <div class="signup">
+    <h2>Get this Monday's list — free.</h2>
+    <p>Drop your email and we'll send you this week's full feed. No card required. See the quality before you pay a cent.</p>
+    <!-- TO ACTIVATE: replace YOUR_FORM_ID with a free Formspree.io endpoint, OR keep the mailto fallback below. -->
+    <form class="form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="text" name="company" placeholder="Company" />
+      <input type="email" name="email" placeholder="Work email" required />
+      <button class="btn" type="submit">Send me the list</button>
+    </form>
+    <p class="fineprint">Weekly email. Unsubscribe anytime. Data sourced from public SEC filings.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 RaiseRadar · Data sourced from SEC EDGAR public filings</div>
+    <div><a href="#sample">Sample</a> &nbsp;·&nbsp; <a href="#pricing">Pricing</a> &nbsp;·&nbsp; <a href="mailto:app.foremanharry@gmail.com">Contact</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
