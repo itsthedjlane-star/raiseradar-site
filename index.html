@@ -278,7 +278,14 @@
         if (res.ok) {
           form.style.display = 'none';
           msg.style.color = '#16E0A3';
-          msg.innerHTML = "✓ You're in! <a href='/sample.csv' download style='color:#16E0A3;text-decoration:underline;font-weight:600'>Download this week's list →</a><br>We've got your email and will send fresh feeds as they publish.";
+          msg.innerHTML = "✓ You're in! Your download is starting now. If it doesn't, <a href='/sample.csv' download style='color:#16E0A3;text-decoration:underline;font-weight:600'>click here to get this week's list →</a><br>We've got your email and will send fresh feeds as they publish.";
+          // auto-trigger the download so every signup gets the content immediately
+          var dl = document.createElement('a');
+          dl.href = '/sample.csv';
+          dl.setAttribute('download', 'raiseradar-this-weeks-list.csv');
+          document.body.appendChild(dl);
+          dl.click();
+          document.body.removeChild(dl);
         } else {
           res.json().then(function (data) {
             btn.disabled = false;
